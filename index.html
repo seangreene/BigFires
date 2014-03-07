@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>California Big Fires</title>
+
+		<style type="text/css">
+			svg {
+
+			}
+			.bar {
+			}
+			.axis path,
+			.axis line {
+			    fill: none;
+			    stroke: black;
+			    shape-rendering: crispEdges;
+			}
+			.axis text {
+			    font-family: sans-serif;
+			    font-size: 11px;
+			}
+			.label {
+				position:relative;
+				color: black;
+				font-size: 15px;
+				z-index:10;
+			}
+			.axis {
+				shape-rendering: crispEdges;
+			}
+
+			.x axis text{
+	  			font-family: arial;
+	   			font-size: 10px;
+	   			text-anchor: middle;
+			}	
+			.x axis line{
+				stroke: #fff;
+				stroke-width: 3px;
+				fill: none;
+			}
+			.y axis text{
+	  			font-family: arial;
+	   			font-size: 10px;
+	   			text-anchor: start;
+			}	
+			.y axis line{
+				stroke: #fff;
+				stroke-width: 3px;
+				fill: none;
+			}
+		</style>
+		
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    </head>
+    <body>
+		<h1>Fires</h1>
+
+		<p>
+			Nine of California's largest wildfires have occurred in the last 10 years.
+		</p>
+		
+        <script type="text/javascript">
+		var margin = {top: 20, right: 20, bottom: 20, left: 50};
+
+		var width = 740 - margin.left - margin.right,
+		height = 590 - margin.top - margin.bottom,
+		barPadding = 1;
+
+		var svg = d3.select("body").append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+			.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+		d3.csv("firedata.csv", function(err, fires) {
+			
+			fires.forEach(function(d) {
+			    d.ACRES = +d.ACRES;
+			    d.RANK = +d.RANK;
+			    d.YEAR = +d.YEAR;
+			    console.log(fires)
+			});
+
+			/*
+			var format = d3.time.format('%Y-%b');
+			format.parse("2013-AUG");
+			format(new Date(2013, 8));
+			*/
+
+			fires.sort(function(a,b) {
+				return a.ACRES - b.ACRES;
+			});
+			
+			var y = d3.scale.linear()
+				.domain([0,273246])
+				.range([height,0]);
+
+			
+			var x = d3.scale.linear()
+				.domain([0, fires.length])
+				.range([0,width]);
+			
+			/*
+			var x = d3.time.scale()
+				.domain([new Date(1932, 9), new Date(2013, 8)] )
+				.range([0, width]);
+			*/
+
+			var bar = svg.selectAll(".bar")
+				.data(fires)
+			.enter().append("rect")
+				.attr("width", 30)
+				.attr("height", function(d) {return height - y(d.ACRES); })
+				.attr("y", function(d) { return y(d.ACRES);  })
+				.attr("x", function(d,i) { return 35 * i;})
+				.attr("class", "bar")
+				.attr("fill", function(d){
+					if (d.YEAR >= 2004) { return "red"}
+					else {return "orange"} 
+				})
+;
+
+			
+			var xAxis = d3.svg.axis()
+				//.ticks(d3.time.years, 5)
+				.scale(x)
+				.orient("bottom");
+
+			svg.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate( 0, " + height + ")" )
+				.call(xAxis);
+
+			/*\
+			//LABELING X AXIS WITH NAME oF FIRE
+			svg.selectAll("text")
+				.data(fires)
+				.enter()
+				.append("text")
+				.text(function(d){
+					return d.NAME;
+				})
+				.attr("x", function(d,i) { return 35 * i;})
+				.attr("y", "560")
+				
+				;
+			*/	
+
+			//CREATING Y AXIS
+			var yAxis = d3.svg.axis()
+				.scale(y)
+				.orient("left");				;
+
+			svg.append("g")
+				.attr("class", "y axis")
+				.attr("transform", "translate( 0, 0)")
+				.call(yAxis);
+
+
+
+		});
+
+			//xscale will maybe fix the width problemz
+			//responsive to the xscale
+
+					
+        </script>
+        <a href="http://www.fire.ca.gov/communications/downloads/fact_sheets/20LACRES.pdf" target="blank">Source</a>
+        <p>
+        	work in progress 3/6/2013
+        </p>
+    </body>
+</html>
