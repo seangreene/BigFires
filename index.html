@@ -63,7 +63,7 @@
 		</p>
 		
         <script type="text/javascript">
-		var margin = {top: 20, right: 20, bottom: 20, left: 50};
+		var margin = {top: 20, right: 0, bottom: 20, left: 50};
 
 		var width = 740 - margin.left - margin.right,
 		height = 590 - margin.top - margin.bottom,
@@ -123,10 +123,10 @@
 					else {return "orange"} 
 				})
 ;
-
+			
 			
 			var xAxis = d3.svg.axis()
-				//.ticks(d3.time.years, 5)
+				.ticks(0)
 				.scale(x)
 				.orient("bottom");
 
