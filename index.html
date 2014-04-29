@@ -10,6 +10,9 @@
 			}
 			.bar {
 			}
+			.bar:hover {
+				fill:lightgray;
+			}
 			.axis path,
 			.axis line {
 			    fill: none;
@@ -17,7 +20,7 @@
 			    shape-rendering: crispEdges;
 			}
 			.axis text {
-			    font-family: sans-serif;
+			    font-family: arial;
 			    font-size: 11px;
 			}
 			.label {
@@ -26,7 +29,10 @@
 				font-size: 15px;
 				z-index:10;
 			}
-			.axis {
+			.axis path,
+			.axis line {
+				fill:none;
+				stroke: #000;
 				shape-rendering: crispEdges;
 			}
 
@@ -54,20 +60,58 @@
 				fill: rgb(255, 19, 0);
 			}
 			.past{
-				fill: rgb(255,98,0);
+				fill: rgb(255,137,64);
+			}
+			.year-label{
+				font-family: sans-serif;
+			    font-size: 11px;
+			}
+
+			/* tooltip */
+			.d3-tip {
+			  font-family: arial;
+			  font-size: 11px;
+			  line-height: 1;
+			  font-weight: bold;
+			  padding: 12px;
+			  background: rgba(0, 0, 0, 0.8);
+			  color: #fff;
+			  border-radius: 2px;
+			}
+
+			/* Creates a small triangle extender for the tooltip */
+			.d3-tip:after {
+			  box-sizing: border-box;
+			  display: inline;
+			  font-size: 10px;
+			  width: 100%;
+			  line-height: 1;
+			  color: rgba(0, 0, 0, 0.8);
+			  content: "\25BC";
+			  position: absolute;
+			  text-align: center;
+			}
+
+			/* Style northward tooltips differently */
+			.d3-tip.n:after {
+			  margin: -1px 0 0 0;
+			  top: 100%;
+			  left: 0;
 			}
 		</style>
 		
         <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
 
     </head>
     <body>		
         <script type="text/javascript">
-		var margin = {top: 20, right: 0, bottom: 20, left: 50};
+		var margin = {top: 60, right: 0, bottom: 20, left: 50};
 
-		var width = 740 - margin.left - margin.right,
-		height = 590 - margin.top - margin.bottom,
-		barPadding = 1;
+		var width = 700 - margin.left - margin.right,
+		height = 350 - margin.top - margin.bottom,
+		barPadding = 2;
 
 		var svg = d3.select("body").append("svg")
 			.attr("width", width + margin.left + margin.right)
@@ -102,30 +146,37 @@
 			
 			var x = d3.scale.linear()
 				.domain([0, fires.length])
-				.range([0,width]);
-			
+				.range([0,width]);			
 			/*
 			var x = d3.time.scale()
 				.domain([new Date(1932, 9), new Date(2013, 8)] )
 				.range([0, width]);
 			*/
 
+			//tooltip
+
+			var tip = d3.tip()
+				.attr('class','d3-tip')
+				.offset([-10,0])
+				.html(function(d) {
+					return "<span>" + d.NAME + " FIRE:<br />" + d.ACRES + "<br />" + d.DATE + "</span>";
+				})
+
+			svg.call(tip);
+
 			var bar = svg.selectAll(".bar")
 				.data(fires)
 			.enter().append("rect")
-				.attr("width", 15)
+				.attr("width", fires.length - barPadding)
 				.attr("height", function(d) {return height - y(d.ACRES); })
 				.attr("y", function(d) { return y(d.ACRES);  })
-				.attr("x", function(d,i) { return 18 * i;})
+				.attr("x", function(d,i) { return i * ( fires.length);})
 				.attr("class", "bar")
 				.classed("recent", function(d){ return d.YEAR >=2000 })
-				.classed("past", function(d){ return d.YEAR <=1999 });
+				.classed("past", function(d){ return d.YEAR <=1999 })
+			    .on('mouseover', tip.show)
+			    .on('mouseout', tip.hide);
 
-
-				// 	if (d.YEAR >= 2004) { return "red"}
-				// 	else {return "orange"} 
-				// });
-			
 			
 			var xAxis = d3.svg.axis()
 				.ticks(0)
@@ -137,20 +188,19 @@
 				.attr("transform", "translate( 0, " + height + ")" )
 				.call(xAxis);
 
-			/*\
+			
 			//LABELING X AXIS WITH NAME oF FIRE
 			svg.selectAll("text")
 				.data(fires)
 				.enter()
 				.append("text")
 				.text(function(d){
-					return d.NAME;
+					return d.YEAR;
 				})
-				.attr("x", function(d,i) { return 35 * i;})
-				.attr("y", "560")
-				
-				;
-			*/	
+				.attr("x", function(d,i) { return i * ( fires.length);})
+				.attr("y", function(d) { return y(d.ACRES);  })
+				.attr("class","year-label");
+			
 
 			//CREATING Y AXIS
 			var yAxis = d3.svg.axis()
@@ -161,7 +211,6 @@
 				.attr("class", "y axis")
 				.attr("transform", "translate( 0, 0)")
 				.call(yAxis);
-
 
 
 		});
