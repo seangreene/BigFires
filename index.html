@@ -50,18 +50,18 @@
 				stroke-width: 3px;
 				fill: none;
 			}
+			.recent{
+				fill: rgb(255, 19, 0);
+			}
+			.past{
+				fill: rgb(255,98,0);
+			}
 		</style>
 		
         <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
     </head>
-    <body>
-		<h1>Fires</h1>
-
-		<p>
-			Nine of California's largest wildfires have occurred in the last 10 years.
-		</p>
-		
+    <body>		
         <script type="text/javascript">
 		var margin = {top: 20, right: 0, bottom: 20, left: 50};
 
@@ -113,16 +113,18 @@
 			var bar = svg.selectAll(".bar")
 				.data(fires)
 			.enter().append("rect")
-				.attr("width", 30)
+				.attr("width", 15)
 				.attr("height", function(d) {return height - y(d.ACRES); })
 				.attr("y", function(d) { return y(d.ACRES);  })
-				.attr("x", function(d,i) { return 35 * i;})
+				.attr("x", function(d,i) { return 18 * i;})
 				.attr("class", "bar")
-				.attr("fill", function(d){
-					if (d.YEAR >= 2004) { return "red"}
-					else {return "orange"} 
-				})
-;
+				.classed("recent", function(d){ return d.YEAR >=2000 })
+				.classed("past", function(d){ return d.YEAR <=1999 });
+
+
+				// 	if (d.YEAR >= 2004) { return "red"}
+				// 	else {return "orange"} 
+				// });
 			
 			
 			var xAxis = d3.svg.axis()
@@ -170,8 +172,6 @@
 					
         </script>
         <a href="http://www.fire.ca.gov/communications/downloads/fact_sheets/20LACRES.pdf" target="blank">Source</a>
-        <p>
-        	work in progress 3/6/2013
-        </p>
+
     </body>
 </html>

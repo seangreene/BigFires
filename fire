@@ -1,0 +1,5 @@
+bigfires$CAUSE <- lapply(strsplit(as.character(bigfires$FIRE.NAME), "\\("), "[", 2)
+bigfires$FIRE.NAME <- lapply(strsplit(as.character(bigfires$FIRE.NAME), "\\("), "[", 1)
+bigfires$CAUSES <- substr(bigfires$CAUSE, 1, nchar(bigfires$CAUSE)-1)
+bigfires$CAUSE <- substr(bigfires$CAUSE, 1, nchar(bigfires$CAUSE)-1)
+bigfires$CAUSE <- substr(bigfires$CAUSE, 1, nchar(bigfires$CAUSE)-1)
