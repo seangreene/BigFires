@@ -167,10 +167,10 @@
 			var bar = svg.selectAll(".bar")
 				.data(fires)
 			.enter().append("rect")
-				.attr("width", fires.length - barPadding)
+				.attr("width", (width/fires.length) - barPadding)
 				.attr("height", function(d) {return height - y(d.ACRES); })
 				.attr("y", function(d) { return y(d.ACRES);  })
-				.attr("x", function(d,i) { return i * ( fires.length);})
+				.attr("x", function(d,i) { return i * ( width/fires.length);})
 				.attr("class", "bar")
 				.classed("recent", function(d){ return d.YEAR >=2000 })
 				.classed("past", function(d){ return d.YEAR <=1999 })
@@ -197,7 +197,7 @@
 				.text(function(d){
 					return d.YEAR;
 				})
-				.attr("x", function(d,i) { return i * ( fires.length);})
+				.attr("x", function(d,i) { return i * ( width/fires.length);})
 				.attr("y", function(d) { return y(d.ACRES);  })
 				.attr("class","year-label");
 			
