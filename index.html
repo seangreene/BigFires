@@ -11,7 +11,7 @@
 			.bar {
 			}
 			.bar:hover {
-				fill:lightgray;
+				opacity: .6;
 			}
 			.axis path,
 			.axis line {
@@ -189,7 +189,8 @@
 				.call(xAxis);
 
 			
-			//LABELING X AXIS WITH NAME oF FIRE
+			//LABELING X AXIS WITH Year
+			/*
 			svg.selectAll("text")
 				.data(fires)
 				.enter()
@@ -200,7 +201,7 @@
 				.attr("x", function(d,i) { return i * ( width/fires.length);})
 				.attr("y", function(d) { return y(d.ACRES);  })
 				.attr("class","year-label");
-			
+			*/
 
 			//CREATING Y AXIS
 			var yAxis = d3.svg.axis()
