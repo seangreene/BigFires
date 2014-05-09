@@ -155,7 +155,7 @@
 				.attr('class','d3-tip')
 				.offset([-10,0])
 				.html(function(d) {
-					return "<span>" + d.NAME + " Fire:<br />" + d.ACRES + "acres <br />" + d.DATE + "</span>";
+					return "<span>" + d.NAME + " Fire:<br />" + d.ACRES2 + " acres<br />" d.COUNTY + ", " + d.DATE + "</span>";
 				})
 
 			svg.call(tip);
