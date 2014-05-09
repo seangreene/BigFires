@@ -107,7 +107,7 @@
     </head>
     <body>		
         <script type="text/javascript">
-		var margin = {top: 60, right: 0, bottom: 20, left: 50};
+		var margin = {top: 30, right: 20, bottom: 10, left: 50};
 
 		var width = 700 - margin.left - margin.right,
 		height = 350 - margin.top - margin.bottom,
@@ -143,17 +143,12 @@
 			var x = d3.scale.linear()
 				.domain([0, fires.length])
 				.range([0,width]);			
-			/*
-			var x = d3.time.scale()
-				.domain([new Date(1932, 9), new Date(2013, 8)] )
-				.range([0, width]);
-			*/
 
 			//tooltip
 
 			var tip = d3.tip()
 				.attr('class','d3-tip')
-				.offset([-10,0])
+				.offset([20,0])
 				.html(function(d) {
 					return "<span>" + d.NAME + " Fire:<br />" + d.ACRES2 + " acres<br />" + d.COUNTY + ", " + d.DATE + "</span>";
 				})
@@ -185,35 +180,20 @@
 				.call(xAxis);
 
 			
-			//LABELING X AXIS WITH Year
-			/*
-			svg.selectAll("text")
-				.data(fires)
-				.enter()
-				.append("text")
-				.text(function(d){
-					return d.YEAR;
-				})
-				.attr("x", function(d,i) { return i * ( width/fires.length);})
-				.attr("y", function(d) { return y(d.ACRES);  })
-				.attr("class","year-label");
-			*/
+
 
 			//CREATING Y AXIS
 			var yAxis = d3.svg.axis()
 				.scale(y)
-				.orient("left");				;
+				.orient("left")
+				.ticks(8);
 
 			svg.append("g")
 				.attr("class", "y axis")
 				.attr("transform", "translate( 0, 0)")
 				.call(yAxis);
 
-
 		});
-
-			//xscale will maybe fix the width problemz
-			//responsive to the xscale
 
 					
         </script>
